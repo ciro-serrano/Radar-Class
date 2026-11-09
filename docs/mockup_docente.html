@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Radar Class — Mockup de interfaces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2F4F3;
+    --panel:#FFFFFF;
+    --ink:#14213D;
+    --ink-soft:#4B5568;
+    --muted:#8A94A6;
+    --line:#DDE2E6;
+    --amber:#E8871E;
+    --amber-soft:#FCE9D2;
+    --teal:#2F7A5C;
+    --teal-soft:#DCEDE5;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{
+    display:flex;
+    min-height:100vh;
+  }
+  /* SIDEBAR */
+  .sidebar{
+    width:220px;
+    background:var(--ink);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    padding:24px 16px;
+    flex-shrink:0;
+  }
+  .brand{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:19px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:36px;
+    letter-spacing:-0.01em;
+  }
+  .brand .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 0 4px rgba(232,135,30,0.25);
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px 12px;
+    border-radius:8px;
+    color:#C6CCD8;
+    font-size:14px;
+    font-weight:500;
+    cursor:pointer;
+    margin-bottom:2px;
+    border:none;
+    background:transparent;
+    width:100%;
+    text-align:left;
+    font-family:'Inter',sans-serif;
+  }
+  .nav-item:hover{background:rgba(255,255,255,0.06);color:#fff;}
+  .nav-item.active{background:rgba(232,135,30,0.15);color:#fff;}
+  .nav-item .ic{font-size:15px;width:18px;text-align:center;}
+  .sidebar-foot{
+    margin-top:auto;
+    padding-top:16px;
+    border-top:1px solid rgba(255,255,255,0.1);
+    font-size:12px;
+    color:var(--muted);
+  }
+  /* MAIN */
+  .main{flex:1;padding:32px 40px;overflow-x:hidden;}
+  .screen{display:none;}
+  .screen.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  .topbar{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    margin-bottom:28px;
+  }
+  .eyebrow{
+    font-size:11px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--muted);font-weight:600;margin-bottom:4px;
+  }
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:26px;margin:0;font-weight:600;letter-spacing:-0.01em;
+  }
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-weight:600;font-size:13.5px;
+    padding:10px 18px;border-radius:8px;border:none;cursor:pointer;
+  }
+  .btn-primary{background:var(--ink);color:#fff;}
+  .btn-amber{background:var(--amber);color:#fff;}
+  .btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
+  .btn-teal{background:var(--teal);color:#fff;}
+  .row{display:flex;gap:8px;}
+  .grid{display:grid;gap:16px;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:1fr 1fr;}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+  }
+  .stat-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:30px;font-weight:700;line-height:1;margin:6px 0 4px;
+  }
+  .stat-label{font-size:12.5px;color:var(--muted);font-weight:500;}
+  .tag{
+    display:inline-block;font-size:11px;font-weight:600;
+    padding:3px 9px;border-radius:20px;
+  }
+  .tag-amber{background:var(--amber-soft);color:#A85D0F;}
+  .tag-teal{background:var(--teal-soft);color:var(--teal);}
+  .list-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:13px 0;border-bottom:1px solid var(--line);font-size:14px;
+  }
+  .list-item:last-child{border-bottom:none;}
+  .muted{color:var(--muted);}
+  .section-title{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;
+    margin:0 0 14px;
+  }
+  label{font-size:12.5px;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:6px;}
+  select, input[type=number], input[type=text]{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:7px;
+    font-family:'Inter';font-size:14px;background:#fff;color:var(--ink);
+  }
+  .field{margin-bottom:16px;}
+  /* radar signature element */
+  .radar-wrap{
+    position:relative;width:180px;height:180px;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .radar-ring{
+    position:absolute;border-radius:50%;border:1px solid var(--line);
+  }
+  .radar-sweep{
+    position:absolute;top:50%;left:50%;width:50%;height:1px;
+    background:linear-gradient(90deg, var(--amber), transparent);
+    transform-origin:left center;
+    animation:sweep 4s linear infinite;
+  }
+  @keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+  .radar-dot{
+    position:absolute;width:8px;height:8px;border-radius:50%;background:var(--amber);
+    box-shadow:0 0 0 4px rgba(232,135,30,0.2);
+  }
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{
+    text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);
+  }
+  td{padding:12px 10px;border-bottom:1px solid var(--line);}
+  .avatar{
+    width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-right:8px;
+  }
+  .login-wrap{
+    min-height:70vh;display:flex;align-items:center;justify-content:center;
+  }
+  .login-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:40px;width:360px;
+  }
+  .login-card .brand{color:var(--ink);justify-content:center;margin-bottom:6px;}
+  .login-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:26px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="sidebar">
+    <div class="brand"><span class="dot"></span>Radar Class</div>
+    <button class="nav-item" data-target="s-login"><span class="ic">&#9673;</span> Iniciar sesión</button>
+    <button class="nav-item active" data-target="s-dashboard"><span class="ic">&#9635;</span> Dashboard</button>
+    <button class="nav-item" data-target="s-cursos"><span class="ic">&#9673;</span> Mis cursos</button>
+    <button class="nav-item" data-target="s-generador"><span class="ic">&#10022;</span> Generar evaluación</button>
+    <button class="nav-item" data-target="s-correccion"><span class="ic">&#10003;</span> Corrección</button>
+    <button class="nav-item" data-target="s-estadisticas"><span class="ic">&#8853;</span> Estadísticas</button>
+    <button class="nav-item" data-target="s-banco"><span class="ic">&#9776;</span> Banco de preguntas</button>
+    <div class="sidebar-foot">Prof. M. Gómez<br>Programación · 3° B</div>
+  </div>
+
+  <div class="main">
+
+    <!-- LOGIN -->
+    <div class="screen" id="s-login">
+      <div class="login-wrap">
+        <div class="login-card">
+          <div class="brand"><span class="dot"></span>Radar Class</div>
+          <div class="login-sub">Acceso para docentes</div>
+          <div class="field"><label>Correo institucional</label><input type="text" placeholder="profesor@colegio.edu.ar"></div>
+          <div class="field"><label>Contraseña</label><input type="text" placeholder="••••••••"></div>
+          <button class="btn btn-primary" style="width:100%;">Ingresar</button>
+          <div style="text-align:center;margin-top:14px;font-size:12.5px;" class="muted">¿Primera vez? Crear cuenta docente</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="screen active" id="s-dashboard">
+      <div class="topbar">
+        <div><div class="eyebrow">Programación · 3° B</div><h1>Dashboard</h1></div>
+        <div class="row"><button class="btn btn-ghost">Cambiar curso</button><button class="btn btn-amber">+ Nueva evaluación</button></div>
+      </div>
+
+      <div class="grid grid-3" style="margin-bottom:16px;">
+        <div class="card"><div class="stat-label">Alumnos activos</div><div class="stat-num">28</div><span class="tag tag-teal">100% con cuenta</span></div>
+        <div class="card"><div class="stat-label">Evaluaciones tomadas</div><div class="stat-num">6</div><span class="tag tag-teal">Este cuatrimestre</span></div>
+        <div class="card"><div class="stat-label">Temas con alerta</div><div class="stat-num">2</div><span class="tag tag-amber">Requieren refuerzo</span></div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="section-title">Alertas recientes</div>
+          <div class="list-item"><span>Arrays en JavaScript <span class="tag tag-amber" style="margin-left:8px;">72% erró</span></span><button class="btn btn-ghost" style="padding:6px 12px;font-size:12.5px;">Ver</button></div>
+          <div class="list-item"><span>Funciones y scope <span class="tag tag-amber" style="margin-left:8px;">58% erró</span></span><button class="btn btn-ghost" style="padding:6px 12px;font-size:12.5px;">Ver</button></div>
+          <div class="list-item"><span>Estructuras condicionales <span class="tag tag-teal" style="margin-left:8px;">88% acertó</span></span><button class="btn btn-ghost" style="padding:6px 12px;font-size:12.5px;">Ver</button></div>
+        </div>
+        <div class="card">
+          <div class="section-title">Accesos rápidos</div>
+          <button class="btn btn-primary" style="width:100%;margin-bottom:10px;">Generar nueva evaluación</button>
+          <button class="btn btn-ghost" style="width:100%;margin-bottom:10px;">Revisar entregas pendientes (5)</button>
+          <button class="btn btn-ghost" style="width:100%;">Ver estadísticas del curso</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIS CURSOS -->
+    <div class="screen" id="s-cursos">
+      <div class="topbar">
+        <div><div class="eyebrow">Comisiones a cargo</div><h1>Mis cursos</h1></div>
+        <button class="btn btn-amber">+ Crear curso</button>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="section-title">Programación · 3° B</div>
+          <div style="margin:14px 0;">
+            <label>Código para que se unan tus alumnos</label>
+            <div class="row" style="align-items:center;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;letter-spacing:.08em;background:var(--amber-soft);color:#A85D0F;padding:10px 16px;border-radius:8px;">PROG-3B-X7K2</div>
+              <button class="btn btn-ghost">Copiar</button>
+            </div>
+          </div>
+          <div class="row"><span class="tag tag-teal">28 alumnos unidos</span><span class="tag" style="background:var(--line);color:var(--ink-soft);">Código permanente</span></div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:14px;">Regenerar código</button>
+        </div>
+        <div class="card">
+          <div class="section-title">Cómo funciona</div>
+          <div class="list-item"><span class="muted">1.</span><span style="flex:1;margin-left:8px;">Creás el curso y el sistema genera el código.</span></div>
+          <div class="list-item"><span class="muted">2.</span><span style="flex:1;margin-left:8px;">Se lo compartís a tus alumnos (pizarrón, WhatsApp, etc).</span></div>
+          <div class="list-item"><span class="muted">3.</span><span style="flex:1;margin-left:8px;">Cada alumno lo ingresa una sola vez y queda vinculado a la comisión.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENERADOR -->
+    <div class="screen" id="s-generador">
+      <div class="topbar">
+        <div><div class="eyebrow">Nueva evaluación</div><h1>Generar con IA</h1></div>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="section-title">Parámetros</div>
+          <div class="field"><label>Materia</label><select><option>Programación</option></select></div>
+          <div class="field"><label>Tema</label><select><option>JavaScript — Arrays</option></select></div>
+          <div class="field"><label>Dificultad</label><select><option>Media</option></select></div>
+          <div class="field"><label>Cantidad de preguntas</label><input type="number" value="10"></div>
+          <div class="field"><label>Tipos de pregunta</label>
+            <div class="row"><span class="tag tag-teal">Opción múltiple</span><span class="tag tag-teal">Verdadero/Falso</span><span class="tag" style="background:var(--line);color:var(--ink-soft);">Desarrollo</span></div>
+          </div>
+          <button class="btn btn-amber" style="width:100%;margin-top:6px;">Generar evaluación</button>
+        </div>
+        <div class="card">
+          <div class="section-title">Vista previa</div>
+          <div class="list-item"><span class="muted">1.</span><span style="flex:1;margin-left:8px;">¿Qué devuelve <code>array.length</code>?</span></div>
+          <div class="list-item"><span class="muted">2.</span><span style="flex:1;margin-left:8px;">Verdadero o falso: los arrays en JS tienen tamaño fijo.</span></div>
+          <div class="list-item"><span class="muted">3.</span><span style="flex:1;margin-left:8px;">Explicá la diferencia entre <code>map()</code> y <code>forEach()</code>.</span></div>
+          <div style="margin-top:14px;" class="row">
+            <button class="btn btn-ghost">Regenerar</button>
+            <button class="btn btn-primary">Aprobar y asignar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CORRECCIÓN -->
+    <div class="screen" id="s-correccion">
+      <div class="topbar">
+        <div><div class="eyebrow">Evaluación · JavaScript Arrays</div><h1>Corrección</h1></div>
+        <span class="tag tag-amber">5 pendientes de revisión</span>
+      </div>
+      <div class="card">
+        <table>
+          <tr><th>Alumno</th><th>Op. múltiple</th><th>Desarrollo (IA sugiere)</th><th></th></tr>
+          <tr><td><span class="avatar">JL</span>Juana López</td><td>8/10</td><td>7 — <span class="muted">"respuesta correcta, falta ejemplo"</span></td><td><button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;">Confirmar</button></td></tr>
+          <tr><td><span class="avatar">MP</span>Marco Paz</td><td>6/10</td><td>5 — <span class="muted">"confunde map con filter"</span></td><td><button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;">Confirmar</button></td></tr>
+          <tr><td><span class="avatar">SR</span>Sofía Ruiz</td><td>10/10</td><td>9 — <span class="muted">"muy completa"</span></td><td><button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;">Confirmar</button></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div class="screen" id="s-estadisticas">
+      <div class="topbar">
+        <div><div class="eyebrow">Programación · 3° B</div><h1>Estadísticas</h1></div>
+        <button class="btn btn-ghost">Exportar PDF</button>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="section-title">Detección de dificultades</div>
+          <div class="radar-wrap">
+            <div class="radar-ring" style="width:180px;height:180px;"></div>
+            <div class="radar-ring" style="width:120px;height:120px;"></div>
+            <div class="radar-ring" style="width:60px;height:60px;"></div>
+            <div class="radar-sweep"></div>
+            <div class="radar-dot" style="top:35px;left:110px;"></div>
+            <div class="radar-dot" style="top:100px;left:40px;"></div>
+          </div>
+          <div style="text-align:center;margin-top:10px;" class="tag tag-amber">2 temas detectados con dificultad</div>
+        </div>
+        <div class="card">
+          <div class="section-title">Preguntas más falladas</div>
+          <div class="list-item"><span>P6 — Arrays: métodos</span><span class="tag tag-amber">72% erró</span></div>
+          <div class="list-item"><span>P3 — Scope de funciones</span><span class="tag tag-amber">58% erró</span></div>
+          <div class="list-item"><span>P9 — Condicionales anidados</span><span class="tag tag-teal">12% erró</span></div>
+          <button class="btn btn-amber" style="width:100%;margin-top:14px;">Generar actividad de refuerzo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANCO DE PREGUNTAS -->
+    <div class="screen" id="s-banco">
+      <div class="topbar">
+        <div><div class="eyebrow">Biblioteca reutilizable</div><h1>Banco de preguntas</h1></div>
+        <button class="btn btn-primary">+ Agregar pregunta</button>
+      </div>
+      <div class="card">
+        <div class="row" style="margin-bottom:16px;">
+          <select style="width:auto;"><option>Materia: todas</option></select>
+          <select style="width:auto;"><option>Dificultad: todas</option></select>
+          <select style="width:auto;"><option>Tipo: todas</option></select>
+        </div>
+        <table>
+          <tr><th>Pregunta</th><th>Tema</th><th>Dificultad</th><th>Usada</th></tr>
+          <tr><td>¿Qué devuelve array.length?</td><td>Arrays</td><td><span class="tag tag-teal">Baja</span></td><td class="muted">3 veces</td></tr>
+          <tr><td>Diferencia entre map y forEach</td><td>Arrays</td><td><span class="tag tag-amber">Alta</span></td><td class="muted">1 vez</td></tr>
+          <tr><td>Explicar hoisting en JS</td><td>Funciones</td><td><span class="tag tag-amber">Alta</span></td><td class="muted">2 veces</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.nav-item').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
