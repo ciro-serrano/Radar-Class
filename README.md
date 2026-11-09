@@ -60,9 +60,3 @@ docs/                        mockups HTML de la presentación (docente y alumno)
   No se promete evitar el uso de IA al 100%.
 - Código de curso permanente, con botón para regenerarlo.
 
-## Pendiente / ideas para seguir
-
-- Validar el límite de tiempo también en el servidor (hoy el timer es del frontend y se autoenvía al llegar a 0).
-- Importar preguntas existentes al banco (Word/PDF).
-- Exportar el examen a PDF.
-- Desplegar (frontend en Vercel, backend + MySQL en un hosting).
