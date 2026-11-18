@@ -11,6 +11,7 @@ import intentosRoutes from './routes/intentos.js';
 import correccionRoutes from './routes/correccion.js';
 import estadisticasRoutes from './routes/estadisticas.js';
 import bancoRoutes from './routes/banco.js';
+import { pool } from './db.js';
 
 if (!process.env.JWT_SECRET) {
   console.error('Falta JWT_SECRET en backend/.env (copiá .env.example a .env)');
@@ -42,4 +43,14 @@ app.use((err, _req, res, _next) => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Radar Class API en http://localhost:${port}`));
+app.listen(port, async () => {
+  console.log(`Radar Class API en http://localhost:${port}`);
+  // Chequeo de la base al arrancar: si algo está mal, lo dice acá en vez de fallar después con "Error interno".
+  try {
+    const [t] = await pool.query("SHOW TABLES LIKE 'usuarios'");
+    if (!t.length) console.error(`[DB] Conecté a MySQL pero en la base "${process.env.DB_NAME || 'radar_class'}" NO existe la tabla "usuarios". Importá database/schema.sql en esa base.`);
+    else console.log(`[DB] OK: conectado a "${process.env.DB_NAME || 'radar_class'}"`);
+  } catch (e) {
+    console.error(`[DB] No pude usar la base (${e.code || e.message}). Revisá DB_HOST, DB_PORT, DB_USER, DB_PASSWORD y DB_NAME en backend/.env, y que MySQL esté encendido.`);
+  }
+});
